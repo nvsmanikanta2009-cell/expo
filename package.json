@@ -12,11 +12,13 @@
     "build:server": "tsc -p tsconfig.server.json",
     "build": "npm run build:client && npm run build:server",
     "start": "NODE_ENV=production tsx server/index.ts",
-    "test": "tsx server/tests/run_tests.ts"
+    "test": "tsx server/tests/run_tests.ts",
+    "db:migrate": "node scripts/migrate.js"
   },
   "dependencies": {
     "@google/genai": "^2.27.0",
     "@ngrok/ngrok": "^1.7.0",
+    "@supabase/supabase-js": "^2.117.3",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

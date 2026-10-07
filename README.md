@@ -106,24 +106,53 @@ The **AI-Powered Accessibility & Inclusion Assistant** is an enterprise-grade di
 
 ## ⚙️ Environment Configuration
 
-Create a `.env` file based on `.env.example`:
+The application uses separate environment configurations for backend and frontend:
 
+### Backend (`server/.env`)
+Create `server/.env` (or use `.env.example` as a template):
 ```env
 PORT=5000
 NODE_ENV=development
 SESSION_SECRET=your_secure_random_session_secret
-
-# Gemini AI API Key (Server-side only)
 GEMINI_API_KEY=your_gemini_api_key
 
-# Supabase Credentials (Optional)
+# Supabase Credentials (Server-side service role key)
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# PostgreSQL Connection String (Optional - falls back to embedded storage if not supplied)
-DATABASE_URL=postgresql://user:password@localhost:5432/accessibility
+# Supabase PostgreSQL Connection String
+DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 ```
+
+### Frontend (`client/.env`)
+Create `client/.env` (Vite-specific client variables):
+```env
+VITE_API_BASE_URL=http://localhost:5000
+VITE_APP_NAME=AI Accessibility Assistant
+VITE_APP_VERSION=1.0.0
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_public_key
+```
+
+---
+
+## 🗄️ Database & Supabase Migrations
+
+The database migration schema is located at:
+`supabase/migrations/001_initial_schema.sql`
+
+It includes:
+- Tables: `users`, `accessibility_profiles`, `transformations`, `sessions`
+- Performance indexes and auto `updated_at` triggers
+- Row Level Security (RLS) policies for `service_role`, `authenticated`, and `anon`
+- Seed data for demo user (`demo@accessibility.ai` / `DemoUser123!`) and admin user
+
+### To apply migrations:
+```bash
+# Apply via migration runner
+npm run db:migrate
+```
+Or paste `supabase/migrations/001_initial_schema.sql` into the Supabase Dashboard SQL Editor.
 
 ---
 
