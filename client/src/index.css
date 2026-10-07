@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #f8fafc;
+    --text-base: #0f172a;
+    --card-base: #ffffff;
+    --border-base: #e2e8f0;
+    --focus-ring: #0284c7;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Accessible focus indicators */
+  *:focus-visible {
+    outline: 3px solid var(--focus-ring) !important;
+    outline-offset: 3px !important;
+  }
+
+  /* High Contrast Yellow on Black Theme */
+  body.theme-yellow-black {
+    background-color: #000000 !important;
+    color: #ffff00 !important;
+  }
+
+  body.theme-yellow-black * {
+    border-color: #ffff00 !important;
+  }
+
+  body.theme-yellow-black a,
+  body.theme-yellow-black button {
+    color: #ffff00 !important;
+  }
+
+  body.theme-yellow-black .card-accessible,
+  body.theme-yellow-black header,
+  body.theme-yellow-black nav,
+  body.theme-yellow-black footer {
+    background-color: #0a0a0a !important;
+    border: 2px solid #ffff00 !important;
+  }
+
+  /* High Contrast Dark Theme */
+  body.theme-dark {
+    background-color: #090d16 !important;
+    color: #f1f5f9 !important;
+  }
+
+  body.theme-dark .card-accessible,
+  body.theme-dark header,
+  body.theme-dark nav,
+  body.theme-dark footer {
+    background-color: #111827 !important;
+    border-color: #1f2937 !important;
+    color: #f1f5f9 !important;
+  }
+
+  /* High Contrast Light (Pure Monochrome Black & White) */
+  body.theme-high-contrast-light {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body.theme-high-contrast-light .card-accessible {
+    border: 2px solid #000000 !important;
+  }
+
+  /* Font size scaling */
+  body.font-size-large {
+    font-size: 1.15rem !important;
+  }
+
+  body.font-size-xlarge {
+    font-size: 1.3rem !important;
+  }
+
+  /* Dyslexic-friendly font spacing */
+  body.font-dyslexic {
+    font-family: 'Lexend', system-ui, sans-serif !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+  }
+
+  /* Highlight cursor reading guide */
+  body.reading-guide-active {
+    cursor: default;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
