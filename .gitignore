@@ -1,29 +1,29 @@
 # Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Build output
-dist/
-build/
-
-# Environment variables
+# Environment variables - NEVER commit secrets
 .env
 .env.local
 .env.production
 
-# Test/tunnel scripts (not needed in repo)
-test-genai.cjs
-start-tunnel.cjs
-pinggy-tunnel.cjs
-tunnel-url.txt
+# Build outputs
+dist/
+build/
+
+# Database files
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Tunnel binaries & temp files
+cloudflared.exe
 ngrok.exe
 ngrok.zip
-cloudflared.exe
-
-# Data files
-data/
+tunnel-url.txt
+start-tunnel.cjs
+pinggy-tunnel.cjs
+test-genai.cjs
 
 # OS files
 .DS_Store
@@ -32,3 +32,7 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Logs
+*.log
+logs/
