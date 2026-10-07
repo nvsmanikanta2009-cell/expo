@@ -10,7 +10,12 @@ import profileRoutes from './routes/profileRoutes.js';
 import transformRoutes from './routes/transformRoutes.js';
 import historyRoutes from './routes/historyRoutes.js';
 
-dotenv.config();
+// Load backend-specific .env from server/.env
+const __filename0 = fileURLToPath(import.meta.url);
+const __dirname0 = path.dirname(__filename0);
+dotenv.config({ path: path.resolve(__dirname0, '.env') });
+// Fallback to root .env if server/.env is missing
+dotenv.config({ path: path.resolve(__dirname0, '../.env') });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
