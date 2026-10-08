@@ -3,8 +3,8 @@ export default {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
-    './client/index.html',
-    './client/src/**/*.{js,ts,jsx,tsx}',
+    '../client/index.html',
+    '../client/src/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: 'class',
   theme: {
