@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { db } from './db/index.js';
 import authRoutes from './routes/authRoutes.js';
@@ -88,19 +89,26 @@ app.use('/api/transform', rateLimiter(40, 60000), transformRoutes);
 app.use('/api/history', historyRoutes);
 
 // In production, serve the Vite frontend build
-const clientDistPath = path.resolve(__dirname, '../dist/client');
-app.use(express.static(clientDistPath));
+const clientDistPath = path.resolve(process.cwd(), 'dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+}
 
 app.get('*', (req: Request, res: Response, next: NextFunction) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ error: 'API route not found' });
   }
-  const indexPath = path.join(clientDistPath, 'index.html');
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      next();
+  const possiblePaths = [
+    path.resolve(process.cwd(), 'dist', 'index.html'),
+    path.resolve(__dirname, '../dist', 'index.html'),
+    path.resolve(__dirname, '../dist/client', 'index.html'),
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return res.sendFile(p);
     }
-  });
+  }
+  next();
 });
 
 // Global Error Handler
