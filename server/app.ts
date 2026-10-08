@@ -15,7 +15,6 @@ import historyRoutes from './routes/historyRoutes.js';
 const __filename0 = fileURLToPath(import.meta.url);
 const __dirname0 = path.dirname(__filename0);
 dotenv.config({ path: path.resolve(__dirname0, '.env') });
-// Fallback to root .env if server/.env is missing
 dotenv.config({ path: path.resolve(__dirname0, '../.env') });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,18 +22,34 @@ const __dirname = path.dirname(__filename);
 
 export const app = express();
 
+let isInitialized = false;
+export async function initDb() {
+  if (!isInitialized) {
+    try {
+      await db.initialize();
+      isInitialized = true;
+    } catch (e) {
+      console.error('DB init warning:', e);
+    }
+  }
+}
+
+// Ensure DB is initialized before handling requests
+app.use(async (_req: Request, _res: Response, next: NextFunction) => {
+  if (!isInitialized) {
+    await initDb();
+  }
+  next();
+});
+
 // Security & Parsing Middlewares
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow local development ports and same-origin or any origin in dev
-      callback(null, true);
-    },
+    origin: true,
     credentials: true,
   })
 );
 
-// Body parsers with generous limits for multimodal base64 images
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 app.use(cookieParser());
@@ -83,6 +98,11 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/transform', rateLimiter(40, 60000), transformRoutes);
 app.use('/api/history', historyRoutes);
 
+// Explicit 404 handler for any unmatched /api requests (always JSON, never HTML)
+app.all('/api/*', (_req: Request, res: Response) => {
+  res.status(404).json({ error: 'API route not found' });
+});
+
 // In production, serve the Vite frontend build
 const clientDistPath = path.resolve(process.cwd(), 'dist');
 if (fs.existsSync(clientDistPath)) {
@@ -113,13 +133,5 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     error: 'An unexpected internal error occurred. Please try again.',
   });
 });
-
-let isInitialized = false;
-export async function initDb() {
-  if (!isInitialized) {
-    await db.initialize();
-    isInitialized = true;
-  }
-}
 
 export default app;

@@ -52,6 +52,7 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/uuid": "^10.0.0",
+    "@vercel/node": "^23.0.0",
     "concurrently": "^9.1.2",
     "localtunnel": "^2.0.2",
     "tsx": "^4.19.3"

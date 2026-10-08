@@ -285,7 +285,11 @@ export const WorkspacePage: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await res.json()
+        : { error: `Server error (${res.status}): API endpoint unavailable. Please ensure serverless functions are configured.` };
+
       if (!res.ok) {
         throw new Error(data.message || data.error || 'Transformation failed.');
       }
