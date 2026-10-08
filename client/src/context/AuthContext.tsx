@@ -36,6 +36,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchCurrentUser();
   }, []);
 
+  const parseResponse = async (res: Response) => {
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      return await res.json();
+    }
+    const text = await res.text();
+    return { error: text.length > 0 && text.length < 150 ? text : `Server error (${res.status}: ${res.statusText || 'Unable to connect to API'})` };
+  };
+
   const login = async (email: string, password: string) => {
     try {
       const res = await fetch('/api/auth/login', {
@@ -43,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      const data = await parseResponse(res);
       if (!res.ok) {
         return { success: false, error: data.error || 'Failed to sign in' };
       }
@@ -61,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      const data = await parseResponse(res);
       if (!res.ok) {
         return { success: false, error: data.error || 'Failed to sign up' };
       }
